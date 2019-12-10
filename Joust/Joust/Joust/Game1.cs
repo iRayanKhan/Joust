@@ -19,6 +19,9 @@ namespace Joust
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D tileSpriteSheet;//Contains the platform
+        Rectangle platformSource = new Rectangle(80, 115, 50, 10);
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -46,6 +49,7 @@ namespace Joust
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            tileSpriteSheet = Content.Load<Texture2D>("tile_sprite_sheet");
 
             // TODO: use this.Content to load your game content here
         }
@@ -82,8 +86,10 @@ namespace Joust
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            spriteBatch.Draw(tileSpriteSheet, new Rectangle(50, 50, 200, 50), platformSource, Color.White);
+            spriteBatch.End();
 
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
