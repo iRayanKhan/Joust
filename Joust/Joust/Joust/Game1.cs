@@ -18,11 +18,14 @@ namespace Joust
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        KeyboardState oldkb;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.Window.AllowUserResizing = true;
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -67,9 +70,14 @@ namespace Joust
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
+            KeyboardState kb = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+           if (kb.IsKeyDown(Keys.Escape) && !oldkb.IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+               
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -81,7 +89,7 @@ namespace Joust
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
