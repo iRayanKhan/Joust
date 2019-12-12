@@ -20,12 +20,15 @@ namespace Joust
         SpriteBatch spriteBatch;
 
         Texture2D tileSpriteSheet;//Contains the platform
-        Rectangle platformSource = new Rectangle(80, 115, 50, 10);
+        Rectangle platformSource = new Rectangle(80, 115, 47, 10);
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Window.AllowUserResizing = true;
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -71,8 +74,9 @@ namespace Joust
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
 
             // TODO: Add your update logic here
 
@@ -85,13 +89,35 @@ namespace Joust
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            spriteBatch.Draw(tileSpriteSheet, new Rectangle(50, 50, 200, 50), platformSource, Color.White);
+            drawPlatforms(spriteBatch);
             spriteBatch.End();
 
 
             base.Draw(gameTime);
+        }
+
+        protected void drawPlatforms(SpriteBatch sb)
+        {
+            List<Rectangle> platforms = new List<Rectangle>();
+            platforms.Add(new Rectangle(0, 100, 100, 50));//Top Left Platform
+            platforms.Add(new Rectangle(0, 400, 200, 50));//Middle Left Platform
+            platforms.Add(new Rectangle(0, 700, 1600, 50));//Bottom Floor Platform
+
+            platforms.Add(new Rectangle(300, 150, 400, 50));//Middle Column Top Platform
+            platforms.Add(new Rectangle(350, 500, 266, 50));//Middle Column Bottom Platform
+
+            platforms.Add(new Rectangle(840, 375, 266, 50));//Jutting to the left of the last column platform
+
+            platforms.Add(new Rectangle(1100, 100, 200, 50));//Left column top platform
+            platforms.Add(new Rectangle(1100, 400, 200, 50));//Left column bottom platform
+
+
+            foreach(Rectangle platform in platforms)
+            {
+                sb.Draw(tileSpriteSheet, platform, platformSource, Color.White);
+            }
         }
     }
 }
