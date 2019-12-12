@@ -19,11 +19,15 @@ namespace Joust
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         KeyboardState oldkb;
+
+        Texture2D tileSpriteSheet;//Contains the platform
+        Rectangle platformSource = new Rectangle(80, 115, 47, 10);
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            this.Window.AllowUserResizing = true;
+            Window.AllowUserResizing = true;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
         }
@@ -49,6 +53,7 @@ namespace Joust
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            tileSpriteSheet = Content.Load<Texture2D>("tile_sprite_sheet");
 
             // TODO: use this.Content to load your game content here
         }
@@ -70,14 +75,10 @@ namespace Joust
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            KeyboardState kb = Keyboard.GetState();
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-           if (kb.IsKeyDown(Keys.Escape) && !oldkb.IsKeyDown(Keys.Escape))
-            {
-                this.Exit();
-            }
-               
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -90,10 +91,32 @@ namespace Joust
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            drawPlatforms(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        protected void drawPlatforms(SpriteBatch sb)
+        {
+            List<Rectangle> platforms = new List<Rectangle>();
+            platforms.Add(new Rectangle(0, 100, 100, 50));//Top Left Platform
+            platforms.Add(new Rectangle(0, 400, 200, 50));//Middle Left Platform
+            platforms.Add(new Rectangle(0, 700, 1600, 50));//Bottom Floor Platform
+
+            platforms.Add(new Rectangle(300, 150, 400, 50));//Middle Column Top Platform
+            platforms.Add(new Rectangle(350, 500, 266, 50));//Middle Column Bottom Platform
+
+            platforms.Add(new Rectangle(840, 375, 266, 50));//Jutting to the left of the last column platform
+
+            platforms.Add(new Rectangle(1100, 100, 200, 50));//Left column top platform
+            platforms.Add(new Rectangle(1100, 400, 200, 50));//Left column bottom platform
+
+
+            foreach(Rectangle platform in platforms)
+            {
+                sb.Draw(tileSpriteSheet, platform, platformSource, Color.White);
+            }
         }
     }
 }
