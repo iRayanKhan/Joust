@@ -11,17 +11,27 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Joust
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        KeyboardState oldkb;
+        KeyboardState oldKB;
 
         Texture2D tileSpriteSheet;//Contains the platform
         Rectangle platformSource = new Rectangle(80, 115, 47, 10);
+
+        Texture2D Pixel;
+        Rectangle Ground;
+        Rectangle Platform;
+        Rectangle Player = new Rectangle(400, 400, 50, 50);
+        Rectangle Collider;
+
+        int gravity = 1;
+        int vel = 0;
+        int jump;
+        int y = 300;
+
+        bool draw;
 
         public Game1()
         {
@@ -32,67 +42,73 @@ namespace Joust
             graphics.ApplyChanges();
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             tileSpriteSheet = Content.Load<Texture2D>("tile_sprite_sheet");
-
-            // TODO: use this.Content to load your game content here
+            Pixel = Content.Load<Texture2D>("Pixel");
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState kb = Keyboard.GetState();
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            if (kb.IsKeyDown(Keys.Space) && !oldKB.IsKeyDown(Keys.Space))
+            {
+                vel = 15;
+                Player.Y -= vel;
+                vel += gravity;
+                jump ++;
+            }
+
+            if (Player.Y+50>=Ground.Y|| Player.Intersects(Collider) && draw)
+            {
+                vel = 0;
+            }
+            else
+            {
+                vel -= gravity;
+                Player.Y -= vel;
+            }
+
+            if(vel<=0)
+            {
+                draw = true;
+            }
+            else { draw = false; }
+           
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+            Ground = new Rectangle(0, 460, 840, 20);
+            Platform = new Rectangle(350, 300, 150, 20);
+            Collider = new Rectangle(Platform.X, y, 150, 10);
+
             spriteBatch.Begin();
             drawPlatforms(spriteBatch);
+
+            spriteBatch.Draw(Pixel, Ground, Color.Black);
+            spriteBatch.Draw(Pixel, Player, Color.Red);
+            spriteBatch.Draw(Pixel, Platform, Color.Black);
+            if (draw)
+            {
+                spriteBatch.Draw(Pixel, Collider, Color.White);
+            }            
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
