@@ -16,6 +16,18 @@ namespace Joust
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         KeyboardState oldKB;
+        
+        bool btn = false;
+        enum GameState
+        {
+            MainMenu,
+            Options,
+            Playing,
+        }
+        
+        GameState CurrentGameState = GameState.MainMenu;
+        cButton btnPlay;
+        int screenWidth = 800, screenHeight = 600;
 
         Texture2D tileSpriteSheet;//Contains the platform
         Rectangle platformSource = new Rectangle(80, 115, 47, 10);
@@ -24,7 +36,7 @@ namespace Joust
         Rectangle Ground = new Rectangle(0, 460, 840, 20);
         Rectangle Platform = new Rectangle(350, 300, 150, 20);
         Rectangle player = new Rectangle(400, 400, 50, 50);
-            List<Rectangle> platforms = new List<Rectangle>();
+        List<Rectangle> platforms = new List<Rectangle>();
 
         int gravity = 1;
         int vel = 0;
@@ -62,11 +74,27 @@ namespace Joust
             spriteBatch = new SpriteBatch(GraphicsDevice);
             tileSpriteSheet = Content.Load<Texture2D>("tile_sprite_sheet");
             pixel = Content.Load<Texture2D>("pixel"); //A white square, can be used to make solid colors
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
+            graphics.ApplyChanges();
+            IsMouseVisible = true;
+            btnPlay = new Joust.cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
+            btnPlay.setPosition(new Vector2(350, 300));
         }
 
         protected override void Update(GameTime gameTime)
         {
             KeyboardState kb = Keyboard.GetState();
+            MouseState mouse = Mouse.GetState();
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    if (btnPlay.isClicked == true) CurrentGameState = GameState.Playing;
+                    btnPlay.Update(mouse);
+                    break;
+                case GameState.Playing:
+                    break;
+            }
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
@@ -103,6 +131,18 @@ namespace Joust
 
             spriteBatch.Begin();
             drawPlatforms(spriteBatch);
+            
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    spriteBatch.Draw(Content.Load<Texture2D>("Main Menu"), new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                    btnPlay.Draw(spriteBatch);
+
+                    bool btn = true;
+                    break;
+                case GameState.Playing:
+                    break;
+            }
 
             spriteBatch.Draw(pixel, player, Color.Red);
             spriteBatch.End();
