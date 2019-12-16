@@ -94,6 +94,12 @@ namespace Joust
                 player.Y -= 5;
             }
 
+            if (kb.IsKeyDown(Keys.Left))
+                player.X -= 4;
+            if (kb.IsKeyDown(Keys.Right))
+                player.X += 4;
+
+
             base.Update(gameTime);
         }
 
