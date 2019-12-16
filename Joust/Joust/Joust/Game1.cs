@@ -22,7 +22,16 @@ namespace Joust
 
         Texture2D tileSpriteSheet;//Contains the platform
         Rectangle platformSource = new Rectangle(80, 115, 47, 10);
-
+        bool btn = false;
+        enum GameState
+        {
+            MainMenu,
+            Options,
+            Playing,
+        }
+        GameState CurrentGameState = GameState.MainMenu;
+        cButton btnPlay;
+        int screenWidth = 800, screenHeight = 600;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -54,7 +63,12 @@ namespace Joust
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             tileSpriteSheet = Content.Load<Texture2D>("tile_sprite_sheet");
-
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
+            graphics.ApplyChanges();
+            IsMouseVisible = true;
+            btnPlay = new Joust.cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
+            btnPlay.setPosition(new Vector2(350, 300));
             // TODO: use this.Content to load your game content here
         }
 
@@ -74,6 +88,16 @@ namespace Joust
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            MouseState mouse = Mouse.GetState();
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    if (btnPlay.isClicked == true) CurrentGameState = GameState.Playing;
+                    btnPlay.Update(mouse);
+                    break;
+                case GameState.Playing:
+                    break;
+            }
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -93,6 +117,17 @@ namespace Joust
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             drawPlatforms(spriteBatch);
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    spriteBatch.Draw(Content.Load<Texture2D>("Main Menu"), new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                    btnPlay.Draw(spriteBatch);
+
+                    bool btn = true;
+                    break;
+                case GameState.Playing:
+                    break;
+            }
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -113,7 +148,7 @@ namespace Joust
             platforms.Add(new Rectangle(1100, 400, 200, 50));//Left column bottom platform
 
 
-            foreach(Rectangle platform in platforms)
+            foreach (Rectangle platform in platforms)
             {
                 sb.Draw(tileSpriteSheet, platform, platformSource, Color.White);
             }
