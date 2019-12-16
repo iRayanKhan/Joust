@@ -19,6 +19,24 @@
       <Output>C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\bin\x86\Debug\Content\pixel.xnb</Output>
       <Time>2019-12-16T09:39:56.6533883-06:00</Time>
     </Item>
+    <Item>
+      <Source>Button.PNG</Source>
+      <Name>Button</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\bin\x86\Debug\Content\Button.xnb</Output>
+      <Time>2019-12-16T09:57:03.1336259-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Main Menu.jpg</Source>
+      <Name>Main Menu</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\bin\x86\Debug\Content\Main Menu.xnb</Output>
+      <Time>2019-12-16T09:57:03.1375814-06:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{5D1A2916-9AB2-4299-A33A-314808528494}</ContentProjectGUID>

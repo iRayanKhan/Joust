@@ -27,7 +27,7 @@ namespace Joust
         
         GameState CurrentGameState = GameState.MainMenu;
         cButton btnPlay;
-        int screenWidth = 800, screenHeight = 600;
+        int screenWidth = 1400, screenHeight = 1000;
 
         Texture2D tileSpriteSheet;//Contains the platform
         Rectangle platformSource = new Rectangle(80, 115, 47, 10);
@@ -122,10 +122,21 @@ namespace Joust
                 player.Y -= 5;
             }
 
+            //directional movement
             if (kb.IsKeyDown(Keys.Left))
                 player.X -= 4;
             if (kb.IsKeyDown(Keys.Right))
                 player.X += 4;
+
+            //screen wrapping
+            if(player.X < -50)
+            {
+                player.X = screenWidth;
+            }
+            if(player.X > screenWidth + 50)
+            {
+                player.X = -20;
+            }
 
 
             base.Update(gameTime);

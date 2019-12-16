@@ -32,3 +32,5 @@ C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\obj\x86\Debug\Joust.csprojResolv
 C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\obj\x86\Debug\Joust.exe
 C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\obj\x86\Debug\Joust.pdb
+C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\bin\x86\Debug\Content\Button.xnb
+C:\Users\208786\Desktop\Joust\Joust\Joust\Joust\bin\x86\Debug\Content\Main Menu.xnb
