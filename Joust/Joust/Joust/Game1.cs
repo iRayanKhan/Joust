@@ -18,11 +18,24 @@ namespace Joust
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        KeyboardState oldkb;
+        bool btn = false;
+        enum GameState
+        {
+            MainMenu,
+            Options,
+            Playing,
+        }
+        GameState CurrentGameState = GameState.MainMenu;
+        cButton btnPlay;
+        int screenWidth = 800, screenHeight = 600;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.Window.AllowUserResizing = true;
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -46,6 +59,12 @@ namespace Joust
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+              graphics.PreferredBackBufferWidth = screenWidth;
+              graphics.PreferredBackBufferHeight = screenHeight;
+              graphics.ApplyChanges();
+            IsMouseVisible = true;
+            btnPlay = new Joust.cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
+            btnPlay.setPosition(new Vector2(350, 300));
 
             // TODO: use this.Content to load your game content here
         }
@@ -66,10 +85,28 @@ namespace Joust
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            MouseState mouse = Mouse.GetState();
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    if (btnPlay.isClicked == true) CurrentGameState = GameState.Playing;
+                    btnPlay.Update(mouse);
+                    break;
+                case GameState.Playing:
+                    break;
+            }
             // Allows the game to exit
+            KeyboardState kb = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+          
+           
+      
+           if (kb.IsKeyDown(Keys.Escape) && !oldkb.IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+               
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -79,12 +116,26 @@ namespace Joust
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// 
+        
         protected override void Draw(GameTime gameTime)
+            
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin();
             // TODO: Add your drawing code here
-
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    spriteBatch.Draw(Content.Load<Texture2D>("Main Menu"), new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                    btnPlay.Draw(spriteBatch);
+                    
+                    bool btn = true;
+                    break;
+                case GameState.Playing:
+                    break;
+            }
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
